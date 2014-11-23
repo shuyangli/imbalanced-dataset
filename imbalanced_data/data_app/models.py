@@ -1,5 +1,47 @@
 from django.db import models
 
+class Classifier:
+  """
+    Params:
+
+    name - Name of the given classifier.
+    description - Description of the Classifier. Are we running Apriori, FP-Growth, etc.
+    program_file - Most likely the external script that will actually be used to execute said classifier.
+  """
+
+  name = models.CharField(max_length=255, blank=True)
+  description = models.TextField(blank=True)
+  program_file = models.FileField(upload_to="classifiers")
+
 # Create your models here.
 class Dataset(models.Model):
-  data_file = FileField()
+  """
+  Params:
+  name: A name or title of the dataset, for easy recognition by the end user.
+  description: A description of the contents of the dataset.
+  data_file: The actual dataset file, uploaded by the user.
+
+  Potentially Add: ForeignKey reference to User, so that the respective files can be associated with a given user?
+  """
+
+  name = models.CharField(max_length=255, blank=False, required=True)
+  description = models.TextField(blank=True)
+  data_file = models.FileField(upload_to="datasets", required=True)
+
+class Analysis(models.Model):
+  """
+    Model that is created whenever the user wants to run an analysis on an imbalanced dataset. Should most likely have a ForeignKey corresponding to the user that created it, in addition to a timestamp corresponding to when it was created, it's status of if it is completed or not, etc.
+
+    Should it run only one classifier at a time or should the user be able to select the classifiers that they would want to run with this specific dataset?
+
+    Params:
+    title: A title for the simulation run for easy understanding of what was occurring.
+    description: A description of the simulation so other users can know what was run within it.
+  """
+
+  title = models.CharField(max_length=255, blank=True, required=False)
+  description = models.TextField(blank=True)
+  classifiers = models.ManyToManyField(classifier)
+  created = models.DateTimeField(auto_now_add=True)
+  modified = models.DateTimeField(auto_now=True)
+  completed = models.BooleanField(default=False)
