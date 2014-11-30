@@ -11,6 +11,10 @@ html, body {
   margin: 0;
 }
 
+body {
+  padding-top: 60px;
+}
+
 #ember-app {
   width: 100%;
 }
@@ -18,3 +22,4 @@ html, body {
 .features {
   padding-bottom: 50px;
 }
+

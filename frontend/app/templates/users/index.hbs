@@ -1,0 +1,17 @@
+
+<div class="push-down">
+  <h1>Testing</h1>
+
+  {{#each user in controller}}
+
+    <ul>
+
+      <li>{{user.email}} - {{user.url}}</li>
+    </ul>
+
+  {{/each}}
+  {{outlet}}
+  }
+</div>
+
+
