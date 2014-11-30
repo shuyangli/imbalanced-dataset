@@ -12,6 +12,7 @@ Router.map(function() {
     this.resource('user', { path: '/:user_id' });
   });
 
+  this.route('dashboard');
 });
 
 export default Router;
