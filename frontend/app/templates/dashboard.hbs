@@ -21,8 +21,11 @@
       <div class="panel panel-default">
 
         <div class="panel-body">
-          <p><strong>Outlet For Creating A New Analysis?</strong></p>
 
+          <p><strong>Outlet For Creating A New Analysis?</strong></p>
+          {{view "select" content=classifiers optionValuePath="content.id" optionLabelPath="content.name"}}
+
+          {{view "select" content=datasets optionValuePath="content.id" optionLabelPath="content.name"}}
           <p>Testing Fetching Datasets</p>
           <ul>
             {{#each dataset in datasets}}
@@ -31,6 +34,7 @@
           </ul>
 
           <p>Testing Fetching Classifiers</p>
+
           <ul>
             {{#each classifier in classifiers}}
               <li>{{classifier.name}} - {{classifier.description}} - {{classifier.program_file}}</li>
