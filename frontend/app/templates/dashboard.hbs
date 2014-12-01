@@ -23,9 +23,18 @@
         <div class="panel-body">
 
           <p><strong>Outlet For Creating A New Analysis?</strong></p>
-          {{view "select" content=classifiers optionValuePath="content.id" optionLabelPath="content.name"}}
+          {{view "select"
+                  content=classifiers
+                  optionValuePath="content.id"
+                  optionLabelPath="content.name"
+                  prompt="Please Select a Classifier"
+          }}
 
-          {{view "select" content=datasets optionValuePath="content.id" optionLabelPath="content.name"}}
+          {{view "select" content=datasets
+                          optionValuePath="content.id"
+                          optionLabelPath="content.name"
+                          prompt="Please Select a Dataset"
+}}
           <p>Testing Fetching Datasets</p>
           <ul>
             {{#each dataset in datasets}}
