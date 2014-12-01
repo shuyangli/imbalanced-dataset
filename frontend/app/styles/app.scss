@@ -11,10 +11,28 @@ html, body {
   margin: 0;
 }
 
+body {
+  padding-top: 60px;
+}
+
 #ember-app {
   width: 100%;
 }
 
 .features {
   padding-bottom: 50px;
+}
+
+.card {
+  background-color: #e5e5e5 !important;
+  padding: 8px;
+  height: 400px;
+}
+
+.top-buffer {
+  margin-top: 20px;
+}
+
+.bottom-buffer {
+  margin-bottom: 20px;
 }

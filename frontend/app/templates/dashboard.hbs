@@ -1,0 +1,45 @@
+
+<div class="container">
+  <h1>Dashboard Framework</h1>
+  <div class="row">
+    <div class="col-lg-4">
+
+      <div class="card">
+        <p><strong>Outlet for Previous Analyses?</strong></p>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <div class="card">
+        <p><strong>Data Visualization Outlet/Component?</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row top-buffer bottom-buffer">
+    <div class="col-lg-12">
+      <div class="panel panel-default">
+
+        <div class="panel-body">
+          <p><strong>Outlet For Creating A New Analysis?</strong></p>
+
+          <p>Testing Fetching Datasets</p>
+          <ul>
+            {{#each dataset in datasets}}
+              <li>{{dataset.name}} - {{dataset.description}} - {{dataset.data_file}}</li>
+            {{/each}}
+          </ul>
+
+          <p>Testing Fetching Classifiers</p>
+          <ul>
+            {{#each classifier in classifiers}}
+              <li>{{classifier.name}} - {{classifier.description}} - {{classifier.program_file}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{outlet}}
+</div>
