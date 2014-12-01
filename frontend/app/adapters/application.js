@@ -1,9 +1,5 @@
-//import DS from 'ember-data';
-import DjangoAdapter from './django';
+import DS from 'ember-data';
 
-/*export default DS.RESTAdapter.extend({
+export default DS.RESTAdapter.extend({
   namespace: 'api'
-});*/
-
-export default DjangoAdapter.extend({
 });

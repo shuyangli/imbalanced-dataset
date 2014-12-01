@@ -1,6 +1,6 @@
 from django.db import models
 
-class Classifier(models.Model):
+class Classifier:
   """
     Params:
 
@@ -12,9 +12,8 @@ class Classifier(models.Model):
   name = models.CharField(max_length=255, blank=True)
   description = models.TextField(blank=True)
   program_file = models.FileField(upload_to="classifiers")
-  def __unicode__(self):
-    return self.name
 
+# Create your models here.
 class Dataset(models.Model):
   """
   Params:
@@ -25,12 +24,9 @@ class Dataset(models.Model):
   Potentially Add: ForeignKey reference to User, so that the respective files can be associated with a given user?
   """
 
-  name = models.CharField(max_length=255, blank=True)
+  name = models.CharField(max_length=255, blank=False, required=True)
   description = models.TextField(blank=True)
-  data_file = models.FileField(upload_to="datasets")
-
-  def __unicode__(self):
-    return self.name
+  data_file = models.FileField(upload_to="datasets", required=True)
 
 class Analysis(models.Model):
   """
@@ -43,9 +39,9 @@ class Analysis(models.Model):
     description: A description of the simulation so other users can know what was run within it.
   """
 
-  title = models.CharField(max_length=255, blank=True)
+  title = models.CharField(max_length=255, blank=True, required=False)
   description = models.TextField(blank=True)
-  classifiers = models.ManyToManyField(Classifier)
+  classifiers = models.ManyToManyField(classifier)
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
   completed = models.BooleanField(default=False)
