@@ -27,4 +27,4 @@ class ClassifierSerializer(serializers.HyperlinkedModelSerializer):
 
   class Meta:
     model = Classifier
-    fields = ('id', 'name', 'description', 'program_file')
+    fields = ('id', 'url', 'name', 'description', 'program_file')
