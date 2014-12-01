@@ -1,7 +1,7 @@
 #from django.forms import widgets
 from rest_framework import serializers
 from django.contrib.auth.models import User, Group
-from data_app.models import Dataset
+from data_app.models import *
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -12,7 +12,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = Group
-    fields = ('url', 'name')
+    fields = ('id', 'url', 'name')
 
 class DatasetSerializer(serializers.HyperlinkedModelSerializer):
   #pk = serializers.IntegerField(read_only=True)
@@ -21,3 +21,10 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
 
   class Meta:
     model = Dataset
+    fields = ('id', 'url', 'name', 'description', 'data_file')
+
+class ClassifierSerializer(serializers.HyperlinkedModelSerializer):
+
+  class Meta:
+    model = Classifier
+    fields = ('id', 'name', 'description', 'program_file')
