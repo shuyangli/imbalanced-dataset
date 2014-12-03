@@ -7,10 +7,15 @@ var app = new EmberApp({
     includePaths: [
       'bower_components/foundation/scss',
       'bower_components/bootstrap-sass-official/assets/stylesheets',
-      'bower_components/bootswatch-scss'
+      'bower_components/bootswatch-scss',
+      //'bower_components/bootstrap-select/dist/'
     ]
   }
 });
+
+
+app.import('bower_components/ember-selectize/src/ember.selectize.js');
+app.import('bower_components/ember-forms/dist/globals/main.js');
 
 // Use `app.import` to add additional libraries to the generated
 // output files.
