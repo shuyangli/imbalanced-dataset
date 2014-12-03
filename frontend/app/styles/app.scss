@@ -2,8 +2,7 @@
 @import 'bootstrap/variables';
 @import 'bootstrap';
 @import 'flatly/bootswatch';
-/*@import 'flatly/bootswatch';
-*/
+
 
 html, body {
   width: 100%;
@@ -35,4 +34,11 @@ body {
 
 .bottom-buffer {
   margin-bottom: 20px;
+}
+
+.ember-view .form-control {
+  height: 100%;
+  width: 40%;
+  float: left;
+  margin-right: 16px;
 }

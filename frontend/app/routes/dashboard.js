@@ -2,10 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   model: function() {
-    /*return Ember.RSVP.hash({
-      datasets: this.store.find('dataset'),
-      classifiers: this.store.find('classifier')
-    })*/
+
   },
 
   setupController: function(controller, model) {

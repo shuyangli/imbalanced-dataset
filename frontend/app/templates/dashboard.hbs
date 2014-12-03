@@ -19,25 +19,58 @@
   <div class="row top-buffer bottom-buffer">
     <div class="col-lg-12">
       <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Create New Analysis</h3>
 
-        <div class="panel-body">
-          <p><strong>Outlet For Creating A New Analysis?</strong></p>
-
-          <p>Testing Fetching Datasets</p>
-          <ul>
-            {{#each dataset in datasets}}
-              <li>{{dataset.name}} - {{dataset.description}} - {{dataset.data_file}}</li>
-            {{/each}}
-          </ul>
-
-          <p>Testing Fetching Classifiers</p>
-          <ul>
-            {{#each classifier in classifiers}}
-              <li>{{classifier.name}} - {{classifier.description}} - {{classifier.program_file}}</li>
-            {{/each}}
-          </ul>
         </div>
-      </div>
+
+        <div class="container">
+
+            <div class="panel-body">
+                <div class="row">
+                  <form class="form-inline" {{action "submit" on="submit"}}>
+
+                      {{select-2
+                              content=classifiers
+                              optionLabelPath="name"
+                              optionValuePath="name"
+                              value=selectedClassifiers
+                              text="name"
+                              description="description"
+                              placeholder="Please Select a Classifier"
+                              id="selectedClassifiers"
+                              multiple=true
+                      }}
+
+
+                    {{select-2
+                            content=datasets
+                            optionValuePath="name"
+                            optionLabelPath="name"
+                            text="name"
+                            description="description"
+                            placeholder="Please Select a Dataset"
+                            id="selectedDatasets"
+                            value=selectedDatasets
+                            multiple=true
+                    }}
+
+
+                    <button class="btn btn-primary">Submit Analysis</button>
+                  </form>
+
+
+                </div>
+
+              <div class="row">
+                {{selectedClassifiers}} <br>
+                {{selectedDatasets}}
+              </div>
+
+            </div>
+          </div>
+        </div>
+
     </div>
   </div>
 
