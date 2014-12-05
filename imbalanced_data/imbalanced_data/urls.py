@@ -4,8 +4,8 @@ from rest_framework import routers, serializers, viewsets
 from data_app import views
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
+#router.register(r'users', views.UserViewSet)
+#router.register(r'groups', views.GroupViewSet)
 router.register(r'datasets', views.DatasetViewSet)
 router.register(r'classifiers', views.ClassifierViewSet)
 # urlpatterns = [
@@ -16,7 +16,9 @@ router.register(r'classifiers', views.ClassifierViewSet)
 
 urlpatterns = [
     url(r'^api/', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^api/groups/$', views.group_list),
+    url(r'^api/users/$', views.user_list),
+    #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^admin/', include(admin.site.urls)),
 
 ]
