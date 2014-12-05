@@ -2,29 +2,28 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User, Group
 from data_app.models import *
+from django.views.decorators.csrf import csrf_exempt
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+  username = serializers.CharField()
   class Meta:
     model = User
-    fields = ('id', 'url', 'username', 'email', 'groups')
+    fields = ('id', 'username', 'email', 'groups')
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+@csrf_exempt
+class GroupSerializer(serializers.ModelSerializer):
+  name = serializers.CharField()
   class Meta:
     model = Group
-    fields = ('id', 'url', 'name')
+    fields = ('id', 'name')
 
 class DatasetSerializer(serializers.HyperlinkedModelSerializer):
-  #pk = serializers.IntegerField(read_only=True)
-  #title = serializers.CharField()
-  #description = serializers.TextField()
-
   class Meta:
     model = Dataset
     fields = ('id', 'url', 'name', 'description', 'data_file')
 
 class ClassifierSerializer(serializers.HyperlinkedModelSerializer):
-
   class Meta:
     model = Classifier
     fields = ('id', 'url', 'name', 'description', 'program_file')

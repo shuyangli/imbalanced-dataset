@@ -38,7 +38,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'django_extensions',
     'data_app',
+    'djcelery',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -87,3 +89,14 @@ CORS_ORIGIN_ALLOW_ALL = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        #'rest_framework.authentication.BasicAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        #'restapi.authentication.ExpiringTokenAuthentication',
+    ),
+    #'PAGINATE_BY': 10
+}
