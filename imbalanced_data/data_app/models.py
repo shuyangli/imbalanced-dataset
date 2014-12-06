@@ -18,6 +18,7 @@ class Classifier(models.Model):
 
 class TestOutput(models.Model):
   content = models.TextField()
+  precision_graph = models.ImageField(upload_to="outputs", blank=True, default='')
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
 
@@ -58,3 +59,11 @@ class Analysis(models.Model):
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
   completed = models.BooleanField(default=False)
+
+# Import utils for post_save tasks.
+from utils import create_analysis_task
+
+# After Creation For Creating Tasks
+post_save.connect(create_analysis_task, sender=Analysis, dispatch_uid="create_new_analysis")
+
+
