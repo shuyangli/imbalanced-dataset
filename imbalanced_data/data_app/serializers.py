@@ -5,13 +5,17 @@ from data_app.models import *
 from django.views.decorators.csrf import csrf_exempt
 
 
+class TestOutputSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = TestOutput
+    fields = ('id', 'content')
+
 class UserSerializer(serializers.ModelSerializer):
   username = serializers.CharField()
   class Meta:
     model = User
     fields = ('id', 'username', 'email', 'groups')
 
-@csrf_exempt
 class GroupSerializer(serializers.ModelSerializer):
   name = serializers.CharField()
   class Meta:

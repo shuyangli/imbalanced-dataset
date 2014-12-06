@@ -1,35 +1,51 @@
 from __future__ import absolute_import
 
-from imbalanced_data.celery import app
+#from imbalanced_data.celery import app
+#
+from celery import shared_task
+from data_app.models import TestOutput
+import random
 
-@app.task
+@shared_task
+def test(param):
+  return 'The test task executed  with argument "%s" ' % param
+
+@shared_task
+def test_output_creation():
+  number = random.randint(0, 2000)
+  test_task = TestOutput(content= "Lorem ipsum testing, whatever. " + str(number))
+  test_task.save()
+
+  return "Test Output Creation executed with number: " + str(number)
+
+@shared_task
 def run_naive_bayes():
   pass
 
-@app.task
+@shared_task
 def run_svm():
   pass
 
-@app.task
+@shared_task
 def run_decision_tree():
   pass
 
-@app.task
+@shared_task
 def run_random_forest():
   pass
 
-@app.task
+@shared_task
 def run_k_nearest():
   pass
 
-@app.task
+@shared_task
 def run_stochastic():
   pass
 
-@app.task
+@shared_task
 def run_gradient():
   pass
 
-@app.task
-def run_bagging:
+@shared_task
+def run_bagging():
   pass

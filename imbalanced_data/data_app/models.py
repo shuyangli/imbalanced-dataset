@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import post_save
 
 class Classifier(models.Model):
   """
@@ -14,6 +15,14 @@ class Classifier(models.Model):
   program_file = models.FileField(upload_to="classifiers")
   def __unicode__(self):
     return self.name
+
+class TestOutput(models.Model):
+  content = models.TextField()
+  created = models.DateTimeField(auto_now_add=True)
+  modified = models.DateTimeField(auto_now=True)
+
+  def __unicode__(self):
+    return self.content
 
 class Dataset(models.Model):
   """

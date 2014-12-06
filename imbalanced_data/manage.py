@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
+from swampdragon.swampdragon_server import run_server
 
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "imbalanced_data.settings")
