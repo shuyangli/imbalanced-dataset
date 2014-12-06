@@ -13,7 +13,9 @@ import sys
 import pandas as pd
 import numpy as np
 
-from django.core.files import ContentFile
+from django.core.files.base import ContentFile
+from StringIO import StringIO
+
 @shared_task
 def test(param):
   return 'The test task executed  with argument "%s" ' % param
@@ -71,19 +73,34 @@ def test_algorithm(classifier_name, file_name):
   Counter(Y_pred) #shows class imbalance
   from sklearn.metrics import classification_report
   print classification_report(Y_test, Y_pred)
+
+  output_report = classification_report(Y_test, Y_pred)
+
   from sklearn import metrics
   fpr, tpr, thresholds = metrics.roc_curve(Y_test, Y_probs[:,1], pos_label=4)
   import matplotlib.pyplot as plt
+  import time
   plt.plot(fpr,tpr)
-  plt.show()
+  f = StringIO()
+  plt.savefig(f)
+
+  content_file = ContentFile(f.getvalue())
+  output_object = TestOutput(content=output_report)
+
+  image_file = "output" + str(int(time.time())) + ".png"
+  output_object.precision_graph.save(image_file, content_file)
+  output_object.save()
+
+  #plt.show()
 
   #Precision Recall curve
   from sklearn.metrics import precision_recall_curve
   precision, recall, thresholds = precision_recall_curve(Y_test, Y_probs[:,1], pos_label = 4)
 
   plt.plot(recall, precision)
-  plt.show()
+  #plt.show()
 
+  print "Analysis done!"
 
 
 @shared_task

@@ -67,7 +67,10 @@
                 {{selectedDatasets}}
 
                 {{#each output in test_outputs}}
-                  <li>{{output.content}}</li>
+                  <li>{{output.content}} - {{output.precision_graph}}
+
+                    <img {{bind-attr src=output.image_url}}>
+                  </li>
                 {{/each}}
               </div>
 

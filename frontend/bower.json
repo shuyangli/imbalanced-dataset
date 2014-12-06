@@ -17,6 +17,11 @@
     "bootstrap-sass-official": "~3.3.0",
     "ember-forms": "~0.4.0",
     "bootstrap-select": "~1.6.3",
-    "select2": "~3.5.2"
+    "select2": "~3.5.2",
+    "ember-selectize": "*",
+    "bootswatch-scss": "~3.2.0"
+  },
+  "resolutions": {
+    "jquery": ">= 1.7.0 < 2.2.0"
   }
 }

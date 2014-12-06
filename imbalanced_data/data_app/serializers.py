@@ -12,7 +12,7 @@ class CustomFileField(serializers.FileField):
 class TestOutputSerializer(serializers.ModelSerializer):
   class Meta:
     model = TestOutput
-    fields = ('id', 'content')
+    fields = ('id', 'content', 'precision_graph')
 
 class UserSerializer(serializers.ModelSerializer):
   username = serializers.CharField()
