@@ -9,5 +9,7 @@ export default Ember.Route.extend({
      this._super(controller,model);
      controller.set('datasets', this.store.find('dataset'));
      controller.set('classifiers', this.store.find('classifier'));
+     controller.set('users', this.store.find('user'));
+     controller.set('test_outputs', this.store.find('test-output'));
   }
 });

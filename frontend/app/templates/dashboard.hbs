@@ -65,6 +65,13 @@
               <div class="row">
                 {{selectedClassifiers}} <br>
                 {{selectedDatasets}}
+
+                {{#each output in test_outputs}}
+                  <li>{{output.content}} - {{output.precision_graph}}
+
+                    <img {{bind-attr src=output.image_url}}>
+                  </li>
+                {{/each}}
               </div>
 
             </div>
