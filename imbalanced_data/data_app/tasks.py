@@ -64,40 +64,49 @@ def test_algorithm(classifier_name, file_name):
 
   #clf = DecisionTreeClassifier()
   #clf = GaussianNB()
-  #clf = RandomForestClassifier()
-  clf = SVC(kernel = "linear", probability=True)
+
+  clf = RandomForestClassifier()
+
+  #clf = SVC(kernel = "linear", probability=True)
   clf = clf.fit(X_train, Y_train)
 
   Y_pred = clf.predict(X_test)
   Y_probs = clf.predict_proba(X_test)
-  Counter(Y_pred) #shows class imbalance
+  print Counter(Y_pred) #shows class imbalance
+
   from sklearn.metrics import classification_report
   print classification_report(Y_test, Y_pred)
-
   output_report = classification_report(Y_test, Y_pred)
 
   from sklearn import metrics
-  fpr, tpr, thresholds = metrics.roc_curve(Y_test, Y_probs[:,1], pos_label=4)
   import matplotlib.pyplot as plt
   import time
+
+  fpr, tpr, thresholds = metrics.roc_curve(Y_test, Y_probs[:,1], pos_label=4)
+
+  precision, recall, thresholds = metrics.precision_recall_curve(Y_test, Y_probs[:,1], pos_label = 4)
+
+  # Precision Graph
+  plt.plot(recall, precision)
+  pf = StringIO()
+  plt.savefig(pf)
+  precision_content_file = ContentFile(pf.getvalue())
+
+  # ROC Curve
   plt.plot(fpr,tpr)
   f = StringIO()
   plt.savefig(f)
+  roc_content_file = ContentFile(f.getvalue())
 
-  content_file = ContentFile(f.getvalue())
   output_object = TestOutput(content=output_report)
 
-  image_file = "output" + str(int(time.time())) + ".png"
-  output_object.precision_graph.save(image_file, content_file)
+  roc_image_file = "roc" + str(int(time.time())) + ".png"
+  precision_image_file = "prec" + str(int(time.time())) + ".png"
+
+  output_object.precision_graph.save(precision_image_file, precision_content_file)
   output_object.save()
 
   #plt.show()
-
-  #Precision Recall curve
-  from sklearn.metrics import precision_recall_curve
-  precision, recall, thresholds = precision_recall_curve(Y_test, Y_probs[:,1], pos_label = 4)
-
-  plt.plot(recall, precision)
   #plt.show()
 
   print "Analysis done!"
