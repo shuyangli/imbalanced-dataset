@@ -5,6 +5,7 @@ export default Ember.Controller.extend({
   classifier_files: Ember.computed.mapBy('classifiers', 'names'),
   selectedDatasets: [],
   selectedClassifiers: [],
+  selectedOutput: null,
   emptyDatasets: function() {
     var sel_datasets = this.get('selectedDatasets');
     var sel_classifiers = this.get('selectedClassifiers');
@@ -53,6 +54,11 @@ export default Ember.Controller.extend({
         });
       }*/
 
+  },
+
+  selectOutput: function(output) {
+    this.set('selectedOutput', output);
+    console.log(output);
   }
  }
 });

@@ -17,7 +17,7 @@ class AnalysisSerializer(serializers.ModelSerializer):
 class TestOutputSerializer(serializers.ModelSerializer):
   class Meta:
     model = TestOutput
-    fields = ('id', 'content', 'precision_graph', 'roc_graph')
+    fields = ('id', 'content', 'precision_graph', 'roc_graph', 'created', 'accuracy_score', 'precision_score', 'recall_score', 'f1_score')
 
 class UserSerializer(serializers.ModelSerializer):
   username = serializers.CharField()

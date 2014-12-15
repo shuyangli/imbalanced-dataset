@@ -3,7 +3,14 @@
 @import 'bootstrap';
 @import 'flatly/bootswatch';
 
+.output-link {
+  cursor: pointer;
+}
 
+.output-image {
+  width: 100%;
+  height: 100%;
+}
 html, body {
   width: 100%;
   padding: 0;
@@ -25,7 +32,8 @@ body {
 .card {
   background-color: #e5e5e5 !important;
   padding: 8px;
-  height: 400px;
+  min-height: 400px;
+
 }
 
 .top-buffer {

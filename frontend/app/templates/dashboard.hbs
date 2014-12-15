@@ -2,16 +2,23 @@
 <div class="container">
   <h1>Dashboard Framework</h1>
   <div class="row">
-    <div class="col-lg-4">
+    <div class="col-lg-3">
 
       <div class="card">
         <p><strong>Outlet for Previous Analyses?</strong></p>
+
+        <ul>
+          {{#each analysis in test_outputs}}
+            <li><a class="output-link" {{action "selectOutput" analysis}}>Analysis</a></li>
+          {{/each}}
+        </ul>
       </div>
     </div>
 
-    <div class="col-lg-8">
+    <div class="col-lg-9">
       <div class="card">
-        <p><strong>Data Visualization Outlet/Component?</strong></p>
+        <p><strong>Data Visualization Outlet</strong></p>
+        <img class="img-responsive graph-img" {{bind-attr src=selectedOutput.image_url}}>
       </div>
     </div>
   </div>
@@ -61,7 +68,7 @@
 
                 </div>
 
-              <div class="row">
+{{!--               <div class="row">
                 {{selectedClassifiers}} <br>
 
                 {{#if selectedDatasets}}
@@ -78,7 +85,7 @@
                 {{/each}}
               </div>
 
-            </div>
+            </div> --}}
           </div>
         </div>
 
