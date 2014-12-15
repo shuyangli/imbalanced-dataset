@@ -9,10 +9,15 @@ class CustomFileField(serializers.FileField):
     request = self.context.get('request', None)
     return request.build_absolute_uri(value.url)
 
+class AnalysisSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Analysis
+    fields = ('id', 'title', 'description', 'dataset', 'classifiers', 'created', 'modified', 'completed')
+
 class TestOutputSerializer(serializers.ModelSerializer):
   class Meta:
     model = TestOutput
-    fields = ('id', 'content', 'precision_graph')
+    fields = ('id', 'content', 'precision_graph', 'roc_graph', 'created', 'accuracy_score', 'precision_score', 'recall_score', 'f1_score')
 
 class UserSerializer(serializers.ModelSerializer):
   username = serializers.CharField()
@@ -40,4 +45,4 @@ class DatasetSerializer(serializers.ModelSerializer):
 class ClassifierSerializer(serializers.ModelSerializer):
   class Meta:
     model = Classifier
-    fields = ('id', 'name', 'description', 'program_file')
+    fields = ('id', 'name', 'description')
