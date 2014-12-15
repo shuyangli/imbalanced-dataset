@@ -20,7 +20,6 @@ export default Ember.Controller.extend({
       //alert("Form submitted with the following files!");
       //alert(this.get('selectedDatasets'));
       console.log(this.get('selectedDatasets'));
-
       var selected_file = this.get('selectedDatasets');
       var selected_classifiers = this.get('selectedClassifiers');
       console.log(selected_classifiers);
