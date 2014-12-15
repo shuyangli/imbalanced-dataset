@@ -28,8 +28,6 @@ export default Ember.Controller.extend({
       var analysis = this.store.createRecord('analysis', {
         'title': "Testing",
         'classifier_ids': selected_classifiers,
-        //'dataset': this.store.find('dataset', selected_file),
-        //'classifiers': this.store.find('classifier', selected_classifiers[0])
       });
 
       //analysis.save();
