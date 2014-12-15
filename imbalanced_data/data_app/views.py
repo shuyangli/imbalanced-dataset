@@ -42,10 +42,20 @@ class AnalysisTaskList(APIView):
     print request.data
     form_data = request.data
     serializer = AnalysisSerializer(data=form_data)
+    print form_data['dataset']
     response = "POST works!"
-    print form_data
+    dataset_file = Dataset.objects.get(pk=form_data['dataset'])
+    classifier = Classifier.objects.get(pk=form_data['classifier_ids'][0])
 
-    test_algorithm.delay("SVM", "files/datasets/breast-cancer_EKTk2SE.csv")
+    classifier_id = form_data['classifier_ids'][0]
+    dataset_id = form_data['dataset']
+    print form_data
+    print "GOT HERE"
+    print classifier.name
+    print dataset_file.data_file.url
+    test_algorithm.delay(classifier_id, dataset_id)
+
+    #"files/datasets/breast-cancer_EKTk2SE.csv")
 
     if serializer.is_valid():
       print "VALID FORM!"
@@ -144,6 +154,8 @@ class DatasetList(APIView):
 
   def post(self, request, format=None):
     serializer = DatasetSerializer(data=request.data)
+    print request.data
+    print request.FILES
     if serializer.is_valid():
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)

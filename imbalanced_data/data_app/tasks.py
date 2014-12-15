@@ -3,7 +3,7 @@ from __future__ import absolute_import
 #from imbalanced_data.celery import app
 #
 from celery import shared_task
-from data_app.models import TestOutput
+from data_app.models import TestOutput, Classifier, Dataset
 from data_app import utils
 import random
 from django.conf import settings
@@ -29,16 +29,15 @@ def test_output_creation():
   return "Test Output Creation executed with number: " + str(number)
 
 @shared_task
-def test_algorithm(classifier_name, file_name):
+def test_algorithm(classifier_id, dataset_id):
   #if(classifier_name == "SVM"):
   root_media_url = settings.MEDIA_URL
-  #print 'GETTING SETTINGS"'
-  #print root_media_url
-  #print file_name
+  classifier = Classifier.objects.get(pk=classifier_id)
+  dataset = Dataset.objects.get(pk=dataset_id)
+  print classifier.name
+  print dataset
 
-  file_url = root_media_url + file_name
-  print file_url
-  DF = pd.read_csv(file_name, header=None, na_values="NA")
+  DF = pd.read_csv(dataset.data_file.url[1:], header=None, na_values="NA")
   DF = DF.drop(DF.columns[6], axis=1)
   print DF.dtypes
 
@@ -90,11 +89,13 @@ def test_algorithm(classifier_name, file_name):
   # Precision Graph
   plt.plot(recall, precision)
   pf = StringIO()
+  plt.title("Precision Graph")
   plt.savefig(pf)
   precision_content_file = ContentFile(pf.getvalue())
 
   # ROC Curve
   plt.plot(fpr,tpr)
+  plt.title("ROC Curve")
   f = StringIO()
   plt.savefig(f)
   roc_content_file = ContentFile(f.getvalue())

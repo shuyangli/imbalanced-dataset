@@ -45,6 +45,8 @@ class Dataset(models.Model):
   name = models.CharField(max_length=255, blank=True)
   description = models.TextField(blank=True)
   data_file = models.FileField(upload_to="datasets")
+  has_headers = models.BooleanField(blank=True, default=False)
+  pos_label = models.IntegerField(default=1, blank=True)
 
   def __unicode__(self):
     return self.name
@@ -63,7 +65,7 @@ class Analysis(models.Model):
   title = models.CharField(max_length=255, blank=True, default='')
   description = models.TextField(blank=True, default='')
   classifiers = models.ManyToManyField(Classifier, blank=True)
-  dataset = models.ForeignKey(Dataset, blank=True)
+  dataset = models.ForeignKey(Dataset, blank=True, null=True)
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
   completed = models.BooleanField(default=False)

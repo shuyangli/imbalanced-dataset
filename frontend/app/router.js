@@ -7,9 +7,13 @@ var Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('landing', {path: '/landing'});
-  this.route('dataset');
+  //this.route('dataset');
   this.resource('users', function() {
     this.resource('user', { path: '/:user_id' });
+  });
+
+  this.resource('datasets', {path:'/datasets'}, function() {
+    this.route('new');
   });
 
   this.route('dashboard', {path: '/'});
@@ -17,6 +21,7 @@ Router.map(function() {
   this.resource('classifiers', function() {
     this.resource('classifier', { path: '/:classifier_id' }, function() { });
   });
+  this.route('datasets/new');
 });
 
 export default Router;

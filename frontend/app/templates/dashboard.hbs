@@ -4,14 +4,24 @@
   <div class="row">
     <div class="col-lg-3">
 
-      <div class="card">
-        <p><strong>Outlet for Previous Analyses?</strong></p>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Recent Analyses Output</h3>
+        </div>
 
-        <ul>
-          {{#each analysis in test_outputs}}
-            <li><a class="output-link" {{action "selectOutput" analysis}}>Analysis</a></li>
-          {{/each}}
-        </ul>
+        <div class="container">
+          <div class="panel-body">
+            <ul class="general-list">
+              {{#each analysis in test_outputs}}
+                <li class="list-item"><a class="output-link" {{action "selectOutput" analysis}}>Analysis</a></li>
+              {{else}}
+                <li class="list-item">No Analyses Completed Yet!</li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+
+
       </div>
     </div>
 
@@ -28,12 +38,12 @@
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Create New Analysis</h3>
-
         </div>
 
         <div class="container">
 
             <div class="panel-body">
+                {{link-to 'Upload New Dataset' 'datasets.new' }}
                 <div class="row">
                   <form class="form-inline" {{action "submit" on="submit"}}>
 
