@@ -48,8 +48,10 @@ class AnalysisTaskList(APIView):
     test_algorithm.delay("SVM", "files/datasets/breast-cancer_EKTk2SE.csv")
 
     if serializer.is_valid():
+      print "VALID FORM!"
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
+    print "Errors!"
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
    # return Response(response, status=status.HTTP_200_OK)

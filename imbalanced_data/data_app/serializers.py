@@ -12,7 +12,7 @@ class CustomFileField(serializers.FileField):
 class AnalysisSerializer(serializers.ModelSerializer):
   class Meta:
     model = Analysis
-    fields = ('id', 'title', 'description', 'classifiers', 'created', 'modified', 'completed')
+    fields = ('id', 'title', 'description', 'dataset', 'classifiers', 'created', 'modified', 'completed')
 
 class TestOutputSerializer(serializers.ModelSerializer):
   class Meta:

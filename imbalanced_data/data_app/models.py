@@ -63,7 +63,7 @@ class Analysis(models.Model):
   title = models.CharField(max_length=255, blank=True, default='')
   description = models.TextField(blank=True, default='')
   classifiers = models.ManyToManyField(Classifier, blank=True)
-  dataset = models.ForeignKey('Dataset', blank=True)
+  dataset = models.ForeignKey(Dataset, blank=True)
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
   completed = models.BooleanField(default=False)

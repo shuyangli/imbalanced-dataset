@@ -26,27 +26,35 @@ export default Ember.Controller.extend({
       console.log(selected_file);
 
       var analysis = this.store.createRecord('analysis', {
-        'title': "Testing"
+        'title': "Testing",
+        'classifier_ids': selected_classifiers,
+        //'dataset': this.store.find('dataset', selected_file),
+        //'classifiers': this.store.find('classifier', selected_classifiers[0])
       });
+
+      //analysis.save();
 
       this.store.find('dataset', selected_file).then(function(file) {
+        console.log("Analysis set.");
         analysis.set('dataset', file);
+        analysis.save();
       });
 
+
       /*for(var i = 0; i < selected_classifiers.length; i++) {
-        var item = this.store.find('classifier', selected_classifiers[i]);
-        analysis.get("classifiers").pushObject(item);
+        var item = this.store.find('classifier', selected_classifiers[i]).then(function(classifier) {
+
+          console.log(classifier);
+          analysis.get("classifiers").then(function(classifiers) {
+            console.log("After getting.");
+            console.log(classifier);
+            classifiers.pushObject(classifier);
+            //analysis.save();
+            console.log("Item pushed!");
+          });
+        });
       }*/
 
-      analysis.save();
-
-     /* analysis.save().then(function() {
-        console.log("Do something.");
-      }, function() {
-        console.log("Error!");
-      });*/
-
-
-    }
   }
+ }
 });
