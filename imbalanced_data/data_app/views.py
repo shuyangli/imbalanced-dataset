@@ -1,10 +1,13 @@
 from django.shortcuts import render
+from django.http import Http404
+
 from rest_framework import viewsets, generics
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import UserSerializer, GroupSerializer, DatasetSerializer, ClassifierSerializer, TestOutputSerializer
+
+from .serializers import UserSerializer, GroupSerializer, DatasetSerializer, ClassifierSerializer, TestOutputSerializer, AnalysisSerializer
 from django.contrib.auth.models import User, Group
 from data_app.models import *
 from django.views.decorators.csrf import csrf_exempt
@@ -26,22 +29,37 @@ class AnalysisTaskList(APIView):
   Testing submission of analysis tasks.
   """
 
+  resource_name = 'analyses'
+
   def get(self, request, format=None):
-    response = Response("GET works!", status=status.HTTP_200_OK)
-    return response
+    analyses = Analysis.objects.all()
+    serializer = AnalysisSerializer(analyses, many=True)
+    return Response(serializer.data)
 
   def post(self, request, format=None):
+    print "POST REQUEST CALLED"
+    print request
+    print request.data
     form_data = request.data
+    serializer = AnalysisSerializer(data=form_data)
     response = "POST works!"
     print form_data
 
-    test_algorithm.delay("SVM", "datasets/breast-cancer_EKTk2SE.csv")
-    return Response(response, status=status.HTTP_200_OK)
+    test_algorithm.delay("SVM", "files/datasets/breast-cancer_EKTk2SE.csv")
+
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+   # return Response(response, status=status.HTTP_200_OK)
 
 class TestOutputList(APIView):
   """
   List all output or create a new one
   """
+
+  resource_name = 'test-output'
 
   def get(self, request, format=None):
     test_outputs = TestOutput.objects.all()
@@ -59,6 +77,8 @@ class UserList(APIView):
   """
   List all users or create a new one.
   """
+
+  resource_name = 'users'
 
   def get(self, request, format=None):
     users = User.objects.all()
@@ -94,6 +114,8 @@ class ClassifierList(APIView):
   List all classifiers or create a new one.
   """
 
+  resource_name = 'classifiers'
+
   def get(self, request, format=None):
     classifiers = Classifier.objects.all()
     serializer = ClassifierSerializer(classifiers, many=True)
@@ -111,6 +133,8 @@ class DatasetList(APIView):
   List all datasets or create a new one.
   """
 
+  resource_name = 'dataset'
+
   def get(self, request, format=None):
     datasets = Dataset.objects.all()
     serializer = DatasetSerializer(datasets, many=True)
@@ -122,3 +146,16 @@ class DatasetList(APIView):
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class DatasetDetail(APIView):
+  def get_object(self, pk):
+    try:
+      return Dataset.objects.get(pk=pk)
+    except Dataset.DoesNotExist:
+      raise Http404
+
+  def get(self, request, pk, format=None):
+    dataset  = self.get_object(pk)
+    serializer = DatasetSerializer(dataset)
+    return Response(serializer.data)
+

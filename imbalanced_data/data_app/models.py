@@ -12,13 +12,20 @@ class Classifier(models.Model):
 
   name = models.CharField(max_length=255, blank=True)
   description = models.TextField(blank=True)
-  program_file = models.FileField(upload_to="classifiers")
+
   def __unicode__(self):
     return self.name
 
 class TestOutput(models.Model):
   content = models.TextField()
   precision_graph = models.ImageField(upload_to="outputs", blank=True, default='')
+  roc_graph = models.ImageField(upload_to="outputs", blank=True, default='')
+  accuracy_score = models.FloatField(blank=True, default=0)
+  precision_score = models.FloatField(blank=True, default=0)
+  recall_score = models.FloatField(blank=True, default=0)
+  f1_score = models.FloatField(blank=True, default=0)
+  #roc_auc = models.FloatField(blank=True, default=0)
+  average_precision = models.FloatField(blank=True, default=0)
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
 
@@ -53,9 +60,10 @@ class Analysis(models.Model):
     description: A description of the simulation so other users can know what was run within it.
   """
 
-  title = models.CharField(max_length=255, blank=True)
-  description = models.TextField(blank=True)
-  classifiers = models.ManyToManyField(Classifier)
+  title = models.CharField(max_length=255, blank=True, default='')
+  description = models.TextField(blank=True, default='')
+  classifiers = models.ManyToManyField(Classifier, blank=True)
+  dataset = models.ForeignKey('Dataset', blank=True)
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
   completed = models.BooleanField(default=False)

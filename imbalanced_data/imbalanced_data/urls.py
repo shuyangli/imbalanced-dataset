@@ -21,10 +21,11 @@ router = routers.DefaultRouter()
 urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^api/groups/$', csrf_exempt(views.GroupList.as_view())),
-    url(r'^api/analysis_test/$', views.AnalysisTaskList.as_view()),
+    url(r'^api/analyses/$', csrf_exempt(views.AnalysisTaskList.as_view())),
     url(r'^api/users/$', csrf_exempt(views.UserList.as_view())),
     url(r'^api/test_outputs/$', csrf_exempt(views.TestOutputList.as_view())),
     url(r'^api/datasets/$', csrf_exempt(views.DatasetList.as_view())),
+    url(r'^api/datasets/(?P<pk>[0-9]+)/$', views.DatasetDetail.as_view()),
     url(r'^api/classifiers/$', csrf_exempt(views.ClassifierList.as_view())),
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^admin/', include(admin.site.urls)),

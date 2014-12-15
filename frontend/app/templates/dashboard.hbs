@@ -33,11 +33,11 @@
                       {{select-2
                               content=classifiers
                               optionLabelPath="name"
-                              optionValuePath="name"
+                              optionValuePath="id"
                               value=selectedClassifiers
                               text="name"
                               description="description"
-                              placeholder="Please Select a Classifier"
+                              placeholder="Please Select Classifier(s)"
                               id="selectedClassifiers"
                               multiple=true
                       }}
@@ -45,18 +45,17 @@
 
                     {{select-2
                             content=datasets
-                            optionValuePath="name"
+                            optionValuePath="id"
                             optionLabelPath="name"
                             text="name"
                             description="description"
                             placeholder="Please Select a Dataset"
                             id="selectedDatasets"
                             value=selectedDatasets
-                            multiple=true
                     }}
 
 
-                    <button class="btn btn-primary">Submit Analysis</button>
+                    <button class="btn btn-primary" {{bind-attr disabled=emptyDatasets}}>Submit Analysis</button>
                   </form>
 
 
@@ -64,7 +63,12 @@
 
               <div class="row">
                 {{selectedClassifiers}} <br>
-                {{selectedDatasets}}
+
+                {{#if selectedDatasets}}
+                  {{selectedDatasets}}
+                {{else}}
+                  No datasets selected
+                {{/if}}
 
                 {{#each output in test_outputs}}
                   <li>{{output.content}} - {{output.precision_graph}}
