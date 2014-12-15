@@ -1,0 +1,21 @@
+
+<div class="container">
+  <div class="row">
+    <h1>Add New Dataset</h1>
+    {{this}}
+    {{#em-form enctype="multipart/form-data" model=controller form_layout="horizontal" action="createDataset"}}
+        {{em-input label="Dataset Name" value=name property="fields.name"}}
+        {{em-text label="Dataset Description" value=description property="fields.description"}}
+        {{em-input label="Positive Label" value=pos_label property="fields.pos_label"}}
+        {{em-input type="file" label="Upload File" value=data_file property="fields.data_file"}}
+        {{em-checkbox label="File Has Header?" value=has_header property="fields.has_header"}}
+
+    {{/em-form}}
+  </div>
+  {{name}}
+  {{description}}
+
+  {{model.name}}
+</div>
+
+{{outlet}}
