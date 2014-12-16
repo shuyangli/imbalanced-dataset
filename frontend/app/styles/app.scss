@@ -17,6 +17,15 @@
 .list-item {
   margin: 0;
 }
+
+.checkbox {
+  vertical-align: center;
+}
+
+.check-style {
+  vertical-align: center;
+  margin-right: 4px;
+}
 .output-image {
   width: 100%;
   height: 100%;
@@ -54,9 +63,14 @@ body {
   margin-bottom: 20px;
 }
 
-.ember-view .form-control {
+.custom-control {
+  //float: left;
+  height: 100%;
+  //width: auto;
+}
+/*.ember-view .form-control {
   height: 100%;
   width: 40%;
   float: left;
   margin-right: 16px;
-}
+}*/
