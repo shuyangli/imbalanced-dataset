@@ -26,9 +26,18 @@
     </div>
 
     <div class="col-lg-9">
-      <div class="card">
-        <p><strong>Data Visualization Outlet</strong></p>
-        <img class="img-responsive graph-img" {{bind-attr src=selectedOutput.image_url}}>
+
+      <div class="panel panel-default">
+
+        <div class="panel-heading">
+          <h3 class="panel-title">Data Visualization</h3>
+        </div>
+
+        <div class="container">
+          <div class="panel-body">
+            <img class="img-responsive graph-img" {{bind-attr src=selectedOutput.image_url}}>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -41,41 +50,71 @@
         </div>
 
         <div class="container">
-
             <div class="panel-body">
-                {{link-to 'Upload New Dataset' 'datasets.new' }}
-                <div class="row">
-                  <form class="form-inline" {{action "submit" on="submit"}}>
+{{!--                 {{link-to 'Upload New Dataset' 'datasets.new' }}
+ --}}            <div class="row">
 
+                    <div class="col-md-11">
+
+                  <form role="form" {{action "submit" on="submit"}}>
+
+                      <div class="form-group">
+                        <label for="title" class="control-label">Analysis Title (optional)</label>
+                        {{view Ember.TextField value=fields.title placeholder="Enter a Name for this Analysis" id="title" class="form-control"
+                        }}
+                      </div>
+
+
+                      <div class="form-group">
+                        <label for="">Analysis Description (optional)</label>
+                        {{textarea value=fields.description placeholder="Enter a Description for this Analysis" class="form-control" }}
+                      </div>
+
+
+                      <div class="form-group">
+                        <label for="selectedClassifiers">Select Classifier(s)</label>
+
+                        {{select-2
+                                label="Select Classifier(s)"
+                                content=classifiers
+                                optionLabelPath="name"
+                                optionValuePath="id"
+                                value=fields.selectedClassifiers
+                                text="name"
+                                description="description"
+                                placeholder="Please Select Classifier(s)"
+                                id="selectedClassifiers"
+                                multiple=true
+                                class="form-control custom-control"
+                        }}
+                      </div>
+
+
+                    <div class="form-group">
+                      <label for="selectedDatasets">Select Dataset</label>
                       {{select-2
-                              content=classifiers
-                              optionLabelPath="name"
+                              content=datasets
                               optionValuePath="id"
-                              value=selectedClassifiers
+                              optionLabelPath="name"
                               text="name"
                               description="description"
-                              placeholder="Please Select Classifier(s)"
-                              id="selectedClassifiers"
-                              multiple=true
+                              placeholder="Please Select a Dataset"
+                              id="selectedDatasets"
+                              value=fields.selectedDatasets
+                              class="form-control custom-control"
                       }}
 
+                      <label>
+                        {{input type="checkbox" class="check-style" checkedBinding="fields.hasHeader" checked=fields.hasHeader}}    Dataset Has Header?
+                      </label>
+                    </div>
 
-                    {{select-2
-                            content=datasets
-                            optionValuePath="id"
-                            optionLabelPath="name"
-                            text="name"
-                            description="description"
-                            placeholder="Please Select a Dataset"
-                            id="selectedDatasets"
-                            value=selectedDatasets
-                    }}
 
 
                     <button class="btn btn-primary" {{bind-attr disabled=emptyDatasets}}>Submit Analysis</button>
                   </form>
 
-
+                </div>
                 </div>
 
 {{!--               <div class="row">
