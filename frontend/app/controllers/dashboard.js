@@ -7,6 +7,7 @@ export default Ember.Controller.extend({
   //selectedDatasets: [],
   //selectedClassifiers: [],
   selectedOutput: null,
+  showPrecision: true,
   emptyDatasets: function() {
     var fields = this.get('fields');
     console.log(fields);
@@ -21,13 +22,8 @@ export default Ember.Controller.extend({
   }.property('fields', 'fields.selectedDatasets', 'fields.selectedClassifiers'),
   actions: {
     submit: function() {
-      //alert("Form submitted with the following files!");
-      //alert(this.get('selectedDatasets'));
-      /*console.log(this.get('selectedDatasets'));
-      var selected_file = this.get('selectedDatasets');
-      var selected_classifiers = this.get('selectedClassifiers');*/
-
       var fields = this.get('fields');
+      var controller = this;
       console.log(fields);
       fields.classifier_ids = fields.selectedClassifiers;
       var selected_classifiers = fields.selectedClassifiers;
@@ -62,34 +58,17 @@ export default Ember.Controller.extend({
         console.log("Done! Now saving!");
         analysis.save().then(function(response) {
           console.log(response);
+          controller.set('showMessage', true);
+          controller.set('message', "Successfully created an analysis!");
+
+          alert("Successfully created an analysis!");
         });
       });
-      /*
-      this.store.find('dataset', fields.selectedDatasets).then(function(file) {
-        console.log("Analysis set.");
-        analysis.set('dataset', file);
+  },
 
-        analysis.save().then(function(response) {
-          console.log("Response!");
-          console.log(response);
-        });
-      });*/
-
-
-      /*for(var i = 0; i < selected_classifiers.length; i++) {
-        var item = this.store.find('classifier', selected_classifiers[i]).then(function(classifier) {
-
-          console.log(classifier);
-          analysis.get("classifiers").then(function(classifiers) {
-            console.log("After getting.");
-            console.log(classifier);
-            classifiers.pushObject(classifier);
-            //analysis.save();
-            console.log("Item pushed!");
-          });
-        });
-      }*/
-
+  toggleGraphs: function() {
+    var value = this.get('showPrecision');
+    this.set('showPrecision', !value);
   },
 
   selectOutput: function(output) {

@@ -28,10 +28,11 @@ class TestOutput(models.Model):
   average_precision = models.FloatField(blank=True, default=0)
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
-  analysis = models.ForeignKey("Analysis", blank=True, related_name = "test_outputs")
+  classifier = models.ForeignKey(Classifier, blank=True, related_name="test_outputs")
+  analysis = models.ForeignKey("Analysis", blank=True, related_name="test_outputs")
 
   def __unicode__(self):
-    return "Test Output: " % self.id
+    return "Test Output: %s" % self.id
 
 class Dataset(models.Model):
   """
@@ -79,7 +80,7 @@ class Analysis(models.Model):
     if self.title:
       return self.title
     else:
-      return "Analysis: %s"  % self.id
+      return "Analysis: %s"  % str(self.id)
 
 # Import utils for post_save tasks.
 from utils import create_analysis_task

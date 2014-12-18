@@ -28,6 +28,8 @@ urlpatterns = [
     url(r'^api/datasets/$', csrf_exempt(views.DatasetList.as_view())),
     url(r'^api/datasets/(?P<pk>[0-9]+)/$', views.DatasetDetail.as_view()),
     url(r'^api/classifiers/$', csrf_exempt(views.ClassifierList.as_view())),
+    url(r'^api/classifiers/(?P<pk>[0-9]+)/$', views.ClassifierDetail.as_view()),
+
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^admin/', include(admin.site.urls)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
