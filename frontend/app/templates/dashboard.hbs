@@ -59,6 +59,10 @@
           <div class="panel-body">
 
             {{#if selectedOutput}}
+
+              <h2>{{selectedOutput.analysis.title}} - {{selectedOutput.classifier.description}} <small>{{selectedOutput.analysis.dataset.name}}</small></h2>
+
+
               {{#if showPrecision}}
                 <a class="output-link" {{action "toggleGraphs"}}>Show ROC Curve</a>
                 <img class="img-responsive graph-img" {{bind-attr src=selectedOutput.image_url}}>

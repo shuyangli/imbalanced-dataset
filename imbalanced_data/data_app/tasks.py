@@ -47,6 +47,7 @@ def classifier_execution(analysis, DF, classifier):
   print "Size is: %s" % str(col_length)
   print Counter(DF.iloc[:,col_length])
   print len(np.unique(DF.iloc[:,col_length]))
+  pos_label = analysis.dataset.pos_label
 
   # Column cleaning.
   if analysis.dataset.ignore_first:
@@ -104,8 +105,8 @@ def classifier_execution(analysis, DF, classifier):
   output_report = classification_report(Y_test, Y_pred)
   print output_report
 
-  fpr, tpr, thresholds = metrics.roc_curve(Y_test, Y_probs[:,1], pos_label=4)
-  precision, recall, thresholds = metrics.precision_recall_curve(Y_test, Y_probs[:,1], pos_label = 4)
+  fpr, tpr, thresholds = metrics.roc_curve(Y_test, Y_probs[:,1], pos_label=pos_label)
+  precision, recall, thresholds = metrics.precision_recall_curve(Y_test, Y_probs[:,1], pos_label = pos_label)
 
   # Precision Graph
   plt.plot(recall, precision)
@@ -128,11 +129,11 @@ def classifier_execution(analysis, DF, classifier):
 
   # Get Various Metrics
   #roc_auc = metrics.roc_auc_score(Y_test, Y_pred)
-  f1_score = metrics.f1_score(Y_test, Y_pred, pos_label=4)
-  precision_score = metrics.precision_score(Y_test, Y_pred, pos_label=4)
+  f1_score = metrics.f1_score(Y_test, Y_pred, pos_label=pos_label)
+  precision_score = metrics.precision_score(Y_test, Y_pred, pos_label=pos_label)
   #average_precision = metrics.average_precision_score(Y_test, Y_pred, pos_label=4)
   accuracy_score = metrics.accuracy_score(Y_test, Y_pred)
-  recall_score = metrics.recall_score(Y_test, Y_pred, pos_label=4)
+  recall_score = metrics.recall_score(Y_test, Y_pred, pos_label=pos_label)
 
   output_object = TestOutput(content=output_report,accuracy_score=accuracy_score, precision_score=precision_score, recall_score=recall_score,f1_score=f1_score, analysis=analysis, classifier=classifier)
 
