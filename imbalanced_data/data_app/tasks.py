@@ -33,13 +33,6 @@ import matplotlib.pyplot as plt
 import time
 
 @shared_task
-def test_output_creation():
-  number = random.randint(0, 2000)
-  test_task = TestOutput(content= "Lorem ipsum testing, whatever. " + str(number))
-  test_task.save()
-
-  return "Test Output Creation executed with number: " + str(number)
-
 def classifier_execution(analysis, DF, classifier):
 
   col_length = len(DF.columns)-1
@@ -50,6 +43,7 @@ def classifier_execution(analysis, DF, classifier):
   pos_label = analysis.dataset.pos_label
 
   # Column cleaning.
+  print "Cleaning the columns!"
   if analysis.dataset.ignore_first:
     X = np.asarray(DF.iloc[:,1:col_length])
   else:
@@ -57,13 +51,14 @@ def classifier_execution(analysis, DF, classifier):
 
   Y = np.asarray(DF.iloc[:,col_length])
 
+  print "Training the data!"
   X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
 
+  print "What's the shape like?"
   print X_train.shape
   print X_test.shape
 
   print "Executing the classifier now"
-
   if classifier.name == "SVM":
     print "Executing SVM"
     #clf = SVC(kernel="linear", probability=True)
@@ -112,6 +107,8 @@ def classifier_execution(analysis, DF, classifier):
   plt.plot(recall, precision)
   pf = StringIO()
   plt.title("Precision Graph")
+  plt.xlabel('Recall')
+  plt.ylabel('Precision')
   plt.savefig(pf)
   precision_content_file = ContentFile(pf.getvalue())
   plt.clf()
@@ -121,6 +118,8 @@ def classifier_execution(analysis, DF, classifier):
   # ROC Curve
   plt.plot(fpr,tpr)
   plt.title("ROC Curve")
+  plt.xlabel('False Positive Rate')
+  plt.ylabel('True Positive Rate')
   f = StringIO()
   plt.savefig(f)
   roc_content_file = ContentFile(f.getvalue())
@@ -135,7 +134,7 @@ def classifier_execution(analysis, DF, classifier):
   accuracy_score = metrics.accuracy_score(Y_test, Y_pred)
   recall_score = metrics.recall_score(Y_test, Y_pred, pos_label=pos_label)
 
-  output_object = TestOutput(content=output_report,accuracy_score=accuracy_score, precision_score=precision_score, recall_score=recall_score,f1_score=f1_score, analysis=analysis, classifier=classifier)
+  output_object = TestOutput(content=str(Counter(Y_pred)),accuracy_score=accuracy_score, precision_score=precision_score, recall_score=recall_score,f1_score=f1_score, analysis=analysis, classifier=classifier)
 
   roc_image_file = "roc" + str(int(time.time())) + ".png"
   precision_image_file = "prec" + str(int(time.time())) + ".png"
@@ -159,9 +158,6 @@ def execute_algorithm(analysis_id):
   dataset = analysis.dataset
   classifiers = analysis.classifiers.all()
 
-  print analysis
-  print analysis.description, analysis.classifiers.all(), analysis.dataset.data_file.url
-
   if dataset.has_header:
     print "File has header."
     header=0
@@ -169,22 +165,21 @@ def execute_algorithm(analysis_id):
     print "File doesn't have header."
     header=None
 
+  print "Reading in the dataset."
   DF = pd.read_csv(dataset.data_file.url[1:], header=header, na_values="NA")
 
+  print "Doing data cleaning."
   for key, value in enumerate(DF.dtypes):
-    print key, value
     if value == 'object':
       print "Found an object"
       DF = DF.drop(DF.columns[key], axis=1)
 
   # Do not use identifiers in the classification.
+  print "Checking first column."
   if analysis.ignore_first:
     DF = DF.drop(DF.columns[0])
 
-  print DF.dtypes
-  print DF.columns
-
-
+  print "Classifier looping."
   for classifier in classifiers:
     print "Executing Classifier!"
     classifier_execution(analysis, DF, classifier)
@@ -254,6 +249,8 @@ def test_algorithm(classifier_id, dataset_id):
   plt.plot(recall, precision)
   pf = StringIO()
   plt.title("Precision Graph")
+  plt.xlabel('Recall')
+  plt.ylabel('Precision')
   plt.savefig(pf)
   precision_content_file = ContentFile(pf.getvalue())
   plt.clf()
