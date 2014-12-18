@@ -122,6 +122,10 @@ REST_FRAMEWORK = {
     #'PAGINATE_BY': 10
 }
 
+SHELL_PLUS_PRE_IMPORTS = (
+    ('data_app.tasks',  'execute_algorithm'),
+)
+
 MEDIA_ROOT = os.path.join(os.getcwd(), 'files')
 MEDIA_URL = '/files/'
 #MEDIA_URL = '/static-files/'

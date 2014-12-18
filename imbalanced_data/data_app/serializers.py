@@ -10,14 +10,15 @@ class CustomFileField(serializers.FileField):
     return request.build_absolute_uri(value.url)
 
 class AnalysisSerializer(serializers.ModelSerializer):
+  test_outputs = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
   class Meta:
     model = Analysis
-    fields = ('id', 'title', 'description', 'dataset', 'classifiers', 'created', 'modified', 'completed')
+    fields = ('id', 'title', 'description', 'dataset', 'classifiers', 'created', 'modified', 'completed', 'has_header', 'pos_label', 'ignore_first', 'test_outputs')
 
 class TestOutputSerializer(serializers.ModelSerializer):
   class Meta:
     model = TestOutput
-    fields = ('id', 'content', 'precision_graph', 'roc_graph', 'created', 'accuracy_score', 'precision_score', 'recall_score', 'f1_score')
+    fields = ('id', 'content', 'precision_graph', 'roc_graph', 'created', 'accuracy_score', 'precision_score', 'recall_score', 'f1_score', 'analysis')
 
 class UserSerializer(serializers.ModelSerializer):
   username = serializers.CharField()

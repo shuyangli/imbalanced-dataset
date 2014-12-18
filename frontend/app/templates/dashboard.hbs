@@ -104,10 +104,29 @@
                               class="form-control custom-control"
                       }}
 
+
+
+
+
+
+                    </div>
+
+                    <div class="form-group">
+                      <label for="posLabel">Positive Label</label>
+                      {{input type="number" class="form-control small-control" value=fields.posLabel placeholder="Enter Value for Positive Class/Label in Dataset" id="posLabel"}}
+
+                    </div>
+
+                    <div class="form-group">
                       <label>
                         {{input type="checkbox" class="check-style" checkedBinding="fields.hasHeader" checked=fields.hasHeader}}    Dataset Has Header?
                       </label>
+
+                      <label>
+                          {{input type="checkbox" class="check-style" checkedBinding="fields.ignoreFirst" checked=fields.ignoreFirst}}  Ignore First Column (Use for IDs)
+                      </label>
                     </div>
+
 
 
 

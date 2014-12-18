@@ -3,8 +3,7 @@ from __future__ import absolute_import
 #from imbalanced_data.celery import app
 #
 from celery import shared_task
-from data_app.models import TestOutput, Classifier, Dataset
-from data_app import utils
+from data_app.models import TestOutput, Classifier, Dataset, Analysis
 import random
 from django.conf import settings
 import sys
@@ -15,10 +14,23 @@ import numpy as np
 
 from django.core.files.base import ContentFile
 from StringIO import StringIO
+from collections import Counter
 
-@shared_task
-def test(param):
-  return 'The test task executed  with argument "%s" ' % param
+from sklearn.cross_validation import train_test_split
+
+# Import Classifiers
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, BaggingClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import SGDClassifier
+
+# Metrics
+from sklearn.metrics import classification_report
+from sklearn import metrics
+import matplotlib.pyplot as plt
+import time
 
 @shared_task
 def test_output_creation():
@@ -28,24 +40,175 @@ def test_output_creation():
 
   return "Test Output Creation executed with number: " + str(number)
 
+def classifier_execution(analysis, DF, classifier):
+
+  col_length = len(DF.columns)-1
+
+  print "Size is: %s" % str(col_length)
+  print Counter(DF.iloc[:,col_length])
+  print len(np.unique(DF.iloc[:,col_length]))
+
+  if analysis.dataset.ignore_first:
+    X = np.asarray(DF.iloc[:,1:col_length])
+  else:
+    X = np.asarray(DF.iloc[:,0:col_length])
+
+  Y = np.asarray(DF.iloc[:,col_length])
+
+  X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
+
+  print X_train.shape
+  print X_test.shape
+
+  print "Executing the classifier now"
+
+  if classifier.name == "SVM":
+    print "Executing SVM"
+    clf = SVC(kernel="linear", probability=True)
+  elif classifier.name =="DT":
+    print "Executing Decision Tree"
+    clf = DecisionTreeClassifier()
+  elif classifier.name == "kNN":
+    print "Executing kNN"
+    clf = KNeighborsClassifier()
+  elif classifier.name == "NB":
+    print "Executing Naive Bayes"
+    clf = GaussianNB()
+  elif classifier.name == "RF":
+    print "Executing Random Forest"
+    clf = RandomForestClassifier()
+  elif classifier.name == "SGD":
+    print "Executing Stochastic Gradient Descent"
+    clf = GradientBoostingClassifier()
+  elif classifier.name == "GB":
+    print "Executing Gradient Boosting"
+    clf = GradientBoostingClassifier()
+  elif classifier.name == "Bagging":
+    print "Executing Bagging"
+    clf = BaggingClassifier()
+
+  clf = clf.fit(X_train, Y_train)
+
+  Y_pred = clf.predict(X_test)
+  Y_probs = clf.predict_proba(X_test)
+
+  print Counter(Y_pred)
+  class_balance = Counter(Y_pred)
+
+  #print "%s, %s" % class_balance[0], class_balance[1]
+
+  output_report = classification_report(Y_test, Y_pred)
+  print output_report
+
+  fpr, tpr, thresholds = metrics.roc_curve(Y_test, Y_probs[:,1], pos_label=4)
+  precision, recall, thresholds = metrics.precision_recall_curve(Y_test, Y_probs[:,1], pos_label = 4)
+
+  # Precision Graph
+  plt.plot(recall, precision)
+  pf = StringIO()
+  plt.title("Precision Graph")
+  plt.savefig(pf)
+  precision_content_file = ContentFile(pf.getvalue())
+
+  # ROC Curve
+  plt.plot(fpr,tpr)
+  plt.title("ROC Curve")
+  f = StringIO()
+  plt.savefig(f)
+  roc_content_file = ContentFile(f.getvalue())
+
+  # Get Various Metrics
+  #roc_auc = metrics.roc_auc_score(Y_test, Y_pred)
+  f1_score = metrics.f1_score(Y_test, Y_pred, pos_label=4)
+  precision_score = metrics.precision_score(Y_test, Y_pred, pos_label=4)
+  #average_precision = metrics.average_precision_score(Y_test, Y_pred, pos_label=4)
+  accuracy_score = metrics.accuracy_score(Y_test, Y_pred)
+  recall_score = metrics.recall_score(Y_test, Y_pred, pos_label=4)
+
+  output_object = TestOutput(content=output_report,accuracy_score=accuracy_score, precision_score=precision_score, recall_score=recall_score,f1_score=f1_score, analysis=analysis)
+
+  roc_image_file = "roc" + str(int(time.time())) + ".png"
+  precision_image_file = "prec" + str(int(time.time())) + ".png"
+
+  output_object.precision_graph.save(precision_image_file, precision_content_file)
+  output_object.roc_graph.save(roc_image_file, roc_content_file)
+  output_object.save()
+
+  print f1_score, precision_score, accuracy_score, recall_score
+  print "Analysis done!"
+
+  pass
+
+@shared_task
+def execute_algorithm(analysis_id):
+  result = "Analysis Executed with the following id: %s" % analysis_id
+  print result
+
+  analysis = Analysis.objects.get(pk=analysis_id)
+  dataset = analysis.dataset
+  classifiers = analysis.classifiers.all()
+
+  print analysis
+  print analysis.description, analysis.classifiers.all(), analysis.dataset.data_file.url
+
+  if dataset.has_header:
+    print "File has header."
+    header=0
+  else:
+    print "File doesn't have header."
+    header=None
+
+  DF = pd.read_csv(dataset.data_file.url[1:], header=header, na_values="NA")
+
+  for key, value in enumerate(DF.dtypes):
+    print key, value
+    if value == 'object':
+      print "Found an object"
+      DF = DF.drop(DF.columns[key], axis=1)
+
+  # Do not use identifiers in the classification.
+  if analysis.ignore_first:
+    DF = DF.drop(DF.columns[0])
+
+  print DF.dtypes
+  print DF.columns
+
+
+  for classifier in classifiers:
+    classifier_execution(analysis, DF, classifier)
+
+
+  #import all classifiers needed here
+  #
+
+
+  #X = np.asarray()
+  #print analysis.classifiers, analysis.dataset, analysis.description
+  #return result
+
+  #pass
+
 @shared_task
 def test_algorithm(classifier_id, dataset_id):
   #if(classifier_name == "SVM"):
   root_media_url = settings.MEDIA_URL
   classifier = Classifier.objects.get(pk=classifier_id)
   dataset = Dataset.objects.get(pk=dataset_id)
-  print classifier.name
-  print dataset
 
   DF = pd.read_csv(dataset.data_file.url[1:], header=None, na_values="NA")
   DF = DF.drop(DF.columns[6], axis=1)
+
   print DF.dtypes
 
   from collections import Counter
   print Counter(DF.iloc[:,9])
   print len(np.unique(DF.iloc[:,9])) # make sure this is 2 for sane inputs
 
-  X = np.asarray(DF.iloc[:,1:9])
+  if dataset.ignore_first:
+    X = np.asarray(DF.iloc[:,1:9])
+  else:
+    X = np.asarray(DF.iloc[:,0:9])
+
   Y = np.asarray(DF.iloc[:,9])
   from sklearn.cross_validation import train_test_split
   X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
@@ -117,41 +280,6 @@ def test_algorithm(classifier_id, dataset_id):
   output_object.roc_graph.save(roc_image_file, roc_content_file)
   output_object.save()
 
-  #plt.show()
-  #plt.show()
 
   print f1_score, precision_score, accuracy_score, recall_score
   print "Analysis done!"
-
-
-@shared_task
-def run_naive_bayes():
-  pass
-
-@shared_task
-def run_svm():
-  pass
-
-@shared_task
-def run_decision_tree():
-  pass
-
-@shared_task
-def run_random_forest():
-  pass
-
-@shared_task
-def run_k_nearest():
-  pass
-
-@shared_task
-def run_stochastic():
-  pass
-
-@shared_task
-def run_gradient():
-  pass
-
-@shared_task
-def run_bagging():
-  pass
