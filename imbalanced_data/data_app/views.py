@@ -150,6 +150,23 @@ class ClassifierList(APIView):
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class ClassifierDetail(APIView):
+  """
+  Detail View of a specific classifier.
+  """
+
+  def get_object(self, pk):
+    try:
+      return Classifier.objects.get(pk=pk)
+    except Classifier.DoesNotExist:
+      raise Http404
+
+  def get(self, request, pk, format=None):
+    classifier  = self.get_object(pk)
+    serializer = ClassifierSerializer(classifier)
+    return Response(serializer.data)
+
+
 class DatasetList(APIView):
   """
   List all datasets or create a new one.

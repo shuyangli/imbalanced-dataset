@@ -9,6 +9,8 @@ export default DS.Model.extend({
   recall_score: DS.attr('number'),
   f1_score: DS.attr('number'),
   created: DS.attr('date'),
+  analysis: DS.belongsTo('analysis', {async: true}),
+  classifier: DS.belongsTo('classifier', {async: true}),
   image_url: Ember.computed('precision_graph', function() {
     return "http://localhost:8000" + this.get('precision_graph');
   }),

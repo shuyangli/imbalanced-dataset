@@ -9,13 +9,35 @@
           <h3 class="panel-title">Recent Analyses Output</h3>
         </div>
 
-        <div class="container">
+        <div class="container-fluid">
           <div class="panel-body">
             <ul class="general-list">
-              {{#each analysis in test_outputs}}
+{{!--               {{#each analysis in test_outputs}}
                 <li class="list-item"><a class="output-link" {{action "selectOutput" analysis}}>Analysis</a></li>
               {{else}}
                 <li class="list-item">No Analyses Completed Yet!</li>
+              {{/each}} --}}
+
+              {{#each analysis in analyses}}
+                <li class="list-item">
+                <h5>{{analysis.title}} - #{{analysis.id}}</h5>
+
+                <ul>
+                  {{#each output in analysis.test_outputs}}
+                    <li class="list-item">
+                      <a class="output-link" {{action "selectOutput" output}}>
+                      {{output.classifier.description}} Analysis</a>
+                    </li>
+
+                    {{else}}
+                      <li>No data to show!</li>
+
+                    {{/each}}
+
+                </ul>
+              </li>
+              {{else}}
+              <li class="list-item">No Analyses Completed Yet!</li>
               {{/each}}
             </ul>
           </div>
@@ -35,7 +57,39 @@
 
         <div class="container">
           <div class="panel-body">
-            <img class="img-responsive graph-img" {{bind-attr src=selectedOutput.image_url}}>
+
+            {{#if selectedOutput}}
+              {{#if showPrecision}}
+                <a class="output-link" {{action "toggleGraphs"}}>Show ROC Curve</a>
+                <img class="img-responsive graph-img" {{bind-attr src=selectedOutput.image_url}}>
+              {{else}}
+                <a class="output-link" {{action "toggleGraphs"}}>Show Precision Graph</a>
+                <img class="img-responsive graph-img" {{bind-attr src=selectedOutput.roc_url}}>
+              {{/if}}
+              <p>
+                <strong>Accuracy Score: {{selectedOutput.accuracy_score}}</strong>
+              </p>
+
+              <p>
+                <strong>Precision Score: {{selectedOutput.precision_score}}</strong>
+              </p>
+
+              <p>
+                <strong>Recall Score: {{selectedOutput.recall_score}}</strong>
+              </p>
+
+              <p>
+                <strong>F1 Score: {{selectedOutput.f1_score}}</strong>
+              </p>
+
+              <p>
+                <strong>Counter Data: {{selectedOutput.content}}</strong>
+              </p>
+            {{else}}
+            <p>Select an analysis result on the left.</p>
+            {{/if}}
+
+
           </div>
         </div>
       </div>
@@ -110,25 +164,6 @@
 
 
                     </div>
-
-                    <div class="form-group">
-                      <label for="posLabel">Positive Label</label>
-                      {{input type="number" class="form-control small-control" value=fields.posLabel placeholder="Enter Value for Positive Class/Label in Dataset" id="posLabel"}}
-
-                    </div>
-
-                    <div class="form-group">
-                      <label>
-                        {{input type="checkbox" class="check-style" checkedBinding="fields.hasHeader" checked=fields.hasHeader}}    Dataset Has Header?
-                      </label>
-
-                      <label>
-                          {{input type="checkbox" class="check-style" checkedBinding="fields.ignoreFirst" checked=fields.ignoreFirst}}  Ignore First Column (Use for IDs)
-                      </label>
-                    </div>
-
-
-
 
                     <button class="btn btn-primary" {{bind-attr disabled=emptyDatasets}}>Submit Analysis</button>
                   </form>

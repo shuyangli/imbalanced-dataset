@@ -18,6 +18,8 @@ app.import('bower_components/ember-selectize/src/ember.selectize.js');
 app.import('bower_components/ember-forms/dist/globals/main.js');
 app.import('bower_components/jquery.cookie/jquery.cookie.js');
 app.import('bower_components/ember-inflector/ember-inflector.js');
+app.import('bower_components/moment/moment.js');
+
 // Use `app.import` to add additional libraries to the generated
 // output files.
 //

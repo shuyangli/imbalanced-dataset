@@ -48,6 +48,7 @@ def classifier_execution(analysis, DF, classifier):
   print Counter(DF.iloc[:,col_length])
   print len(np.unique(DF.iloc[:,col_length]))
 
+  # Column cleaning.
   if analysis.dataset.ignore_first:
     X = np.asarray(DF.iloc[:,1:col_length])
   else:
@@ -64,7 +65,8 @@ def classifier_execution(analysis, DF, classifier):
 
   if classifier.name == "SVM":
     print "Executing SVM"
-    clf = SVC(kernel="linear", probability=True)
+    #clf = SVC(kernel="linear", probability=True)
+    clf = DecisionTreeClassifier()
   elif classifier.name =="DT":
     print "Executing Decision Tree"
     clf = DecisionTreeClassifier()
@@ -86,6 +88,8 @@ def classifier_execution(analysis, DF, classifier):
   elif classifier.name == "Bagging":
     print "Executing Bagging"
     clf = BaggingClassifier()
+
+  print "Fitting the data!"
 
   clf = clf.fit(X_train, Y_train)
 
@@ -109,6 +113,9 @@ def classifier_execution(analysis, DF, classifier):
   plt.title("Precision Graph")
   plt.savefig(pf)
   precision_content_file = ContentFile(pf.getvalue())
+  plt.clf()
+
+
 
   # ROC Curve
   plt.plot(fpr,tpr)
@@ -116,6 +123,8 @@ def classifier_execution(analysis, DF, classifier):
   f = StringIO()
   plt.savefig(f)
   roc_content_file = ContentFile(f.getvalue())
+  plt.clf()
+
 
   # Get Various Metrics
   #roc_auc = metrics.roc_auc_score(Y_test, Y_pred)
@@ -125,7 +134,7 @@ def classifier_execution(analysis, DF, classifier):
   accuracy_score = metrics.accuracy_score(Y_test, Y_pred)
   recall_score = metrics.recall_score(Y_test, Y_pred, pos_label=4)
 
-  output_object = TestOutput(content=output_report,accuracy_score=accuracy_score, precision_score=precision_score, recall_score=recall_score,f1_score=f1_score, analysis=analysis)
+  output_object = TestOutput(content=output_report,accuracy_score=accuracy_score, precision_score=precision_score, recall_score=recall_score,f1_score=f1_score, analysis=analysis, classifier=classifier)
 
   roc_image_file = "roc" + str(int(time.time())) + ".png"
   precision_image_file = "prec" + str(int(time.time())) + ".png"
@@ -134,6 +143,7 @@ def classifier_execution(analysis, DF, classifier):
   output_object.roc_graph.save(roc_image_file, roc_content_file)
   output_object.save()
 
+  analysis.completed = True
   print f1_score, precision_score, accuracy_score, recall_score
   print "Analysis done!"
 
@@ -175,18 +185,8 @@ def execute_algorithm(analysis_id):
 
 
   for classifier in classifiers:
+    print "Executing Classifier!"
     classifier_execution(analysis, DF, classifier)
-
-
-  #import all classifiers needed here
-  #
-
-
-  #X = np.asarray()
-  #print analysis.classifiers, analysis.dataset, analysis.description
-  #return result
-
-  #pass
 
 @shared_task
 def test_algorithm(classifier_id, dataset_id):
@@ -255,6 +255,7 @@ def test_algorithm(classifier_id, dataset_id):
   plt.title("Precision Graph")
   plt.savefig(pf)
   precision_content_file = ContentFile(pf.getvalue())
+  plt.clf()
 
   # ROC Curve
   plt.plot(fpr,tpr)
@@ -262,6 +263,7 @@ def test_algorithm(classifier_id, dataset_id):
   f = StringIO()
   plt.savefig(f)
   roc_content_file = ContentFile(f.getvalue())
+  plt.clf()
 
   # Get Various Metrics
   #roc_auc = metrics.roc_auc_score(Y_test, Y_pred)
@@ -271,7 +273,7 @@ def test_algorithm(classifier_id, dataset_id):
   accuracy_score = metrics.accuracy_score(Y_test, Y_pred)
   recall_score = metrics.recall_score(Y_test, Y_pred, pos_label=4)
 
-  output_object = TestOutput(content=output_report,accuracy_score=accuracy_score, precision_score=precision_score, recall_score=recall_score,f1_score=f1_score)
+  output_object = TestOutput(content=Counter(Y_pred), accuracy_score=accuracy_score, precision_score=precision_score, recall_score=recall_score,f1_score=f1_score)
 
   roc_image_file = "roc" + str(int(time.time())) + ".png"
   precision_image_file = "prec" + str(int(time.time())) + ".png"

@@ -20,7 +20,9 @@
     "select2": "~3.5.2",
     "ember-selectize": "*",
     "bootswatch-scss": "~3.2.0",
-    "ember-inflector": "1.3.0"
+    "ember-inflector": "1.3.0",
+    "ember-cli-moment-shim": "~0.0.2",
+    "moment": "~2.8.4"
   },
   "resolutions": {
     "jquery": ">= 1.7.0 < 2.2.0",
