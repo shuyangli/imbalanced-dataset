@@ -23,6 +23,7 @@ export default Ember.Controller.extend({
   actions: {
     submit: function() {
       var fields = this.get('fields');
+      var controller = this;
       console.log(fields);
       fields.classifier_ids = fields.selectedClassifiers;
       var selected_classifiers = fields.selectedClassifiers;
@@ -57,6 +58,10 @@ export default Ember.Controller.extend({
         console.log("Done! Now saving!");
         analysis.save().then(function(response) {
           console.log(response);
+          controller.set('showMessage', true);
+          controller.set('message', "Successfully created an analysis!");
+
+          alert("Successfully created an analysis!");
         });
       });
   },

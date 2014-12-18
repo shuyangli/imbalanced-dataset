@@ -2,12 +2,16 @@
 <div class="container">
   <h1>Dashboard Framework</h1>
   <div class="row">
+
+
     <div class="col-lg-3">
 
       <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">Recent Analyses Output</h3>
         </div>
+
+
 
         <div class="container-fluid">
           <div class="panel-body">
@@ -55,7 +59,7 @@
           <h3 class="panel-title">Data Visualization</h3>
         </div>
 
-        <div class="container">
+        <div class="container-fluid">
           <div class="panel-body">
 
             {{#if selectedOutput}}
@@ -64,10 +68,10 @@
 
 
               {{#if showPrecision}}
-                <a class="output-link" {{action "toggleGraphs"}}>Show ROC Curve</a>
+                <a class="output-link btn btn-default" {{action "toggleGraphs"}}>Show ROC Curve</a>
                 <img class="img-responsive graph-img" {{bind-attr src=selectedOutput.image_url}}>
               {{else}}
-                <a class="output-link" {{action "toggleGraphs"}}>Show Precision Graph</a>
+                <a class="output-link btn btn-default" {{action "toggleGraphs"}}>Show Precision Graph</a>
                 <img class="img-responsive graph-img" {{bind-attr src=selectedOutput.roc_url}}>
               {{/if}}
               <p>
@@ -107,7 +111,7 @@
           <h3 class="panel-title">Create New Analysis</h3>
         </div>
 
-        <div class="container">
+        <div class="container-fluid">
             <div class="panel-body">
 {{!--                 {{link-to 'Upload New Dataset' 'datasets.new' }}
  --}}            <div class="row">
