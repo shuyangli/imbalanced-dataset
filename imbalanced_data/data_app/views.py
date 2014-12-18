@@ -53,7 +53,7 @@ class AnalysisTaskList(APIView):
     print "GOT HERE"
     print classifier.name
     print dataset_file.data_file.url
-    test_algorithm.delay(classifier_id, dataset_id)
+    #test_algorithm.delay(classifier_id, dataset_id)
 
     #"files/datasets/breast-cancer_EKTk2SE.csv")
 
@@ -61,10 +61,20 @@ class AnalysisTaskList(APIView):
       print "VALID FORM!"
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
-    print "Errors!"
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-   # return Response(response, status=status.HTTP_200_OK)
+class AnalysisDetail(APIView):
+  def get_object(self, pk):
+    try:
+      return Analysis.objects.get(pk=pk)
+    except Analysis.DoesNotExist:
+      raise Http404
+
+  def get(self, request, pk, format=None):
+    analysis  = self.get_object(pk)
+    serializer = AnalysisSerializer(analysis)
+    return Response(serializer.data)
 
 class TestOutputList(APIView):
   """

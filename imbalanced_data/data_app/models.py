@@ -28,9 +28,10 @@ class TestOutput(models.Model):
   average_precision = models.FloatField(blank=True, default=0)
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
+  analysis = models.ForeignKey("Analysis", blank=True, related_name = "test_outputs")
 
   def __unicode__(self):
-    return self.content
+    return "Test Output: " % self.id
 
 class Dataset(models.Model):
   """
@@ -45,8 +46,9 @@ class Dataset(models.Model):
   name = models.CharField(max_length=255, blank=True)
   description = models.TextField(blank=True)
   data_file = models.FileField(upload_to="datasets")
-  has_headers = models.BooleanField(blank=True, default=False)
-  pos_label = models.IntegerField(default=1, blank=True)
+  pos_label = models.IntegerField(default=4, blank=True)
+  has_header = models.BooleanField(default=False)
+  ignore_first = models.BooleanField(default=True)
 
   def __unicode__(self):
     return self.name
@@ -69,6 +71,15 @@ class Analysis(models.Model):
   created = models.DateTimeField(auto_now_add=True)
   modified = models.DateTimeField(auto_now=True)
   completed = models.BooleanField(default=False)
+  has_header = models.BooleanField(default=False)
+  ignore_first = models.BooleanField(default=False)
+  pos_label = models.IntegerField(default=1)
+
+  def __unicode__(self):
+    if self.title:
+      return self.title
+    else:
+      return "Analysis: %s"  % self.id
 
 # Import utils for post_save tasks.
 from utils import create_analysis_task
